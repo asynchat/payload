@@ -165,6 +165,7 @@ export function vercelPostgresAdapter(args: Args = {}): DatabaseAdapterObj<Verce
       }),
       createVersion,
       defaultIDType: payloadIDType,
+      deleteGlobalVersions,
       deleteMany,
       deleteOne,
       deleteVersions,
@@ -176,7 +177,6 @@ export function vercelPostgresAdapter(args: Args = {}): DatabaseAdapterObj<Verce
       findGlobal,
       findGlobalVersions,
       // @ts-expect-error - vestiges of when tsconfig was not strict. Feel free to improve
-      deleteGlobalVersions,
       findOne,
       findVersions,
       init,
