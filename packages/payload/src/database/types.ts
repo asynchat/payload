@@ -32,14 +32,13 @@ export interface BaseDatabaseAdapter {
   connect?: Connect
   count: Count
   countGlobalVersions: CountGlobalVersions
-
   countVersions: CountVersions
 
   create: Create
 
   createGlobal: CreateGlobal
-  createGlobalVersion: CreateGlobalVersion
 
+  createGlobalVersion: CreateGlobalVersion
   /**
    * Output a migration file
    */
@@ -51,6 +50,8 @@ export interface BaseDatabaseAdapter {
    * Specify if the ID is a text or number field by default within this database adapter.
    */
   defaultIDType: 'number' | 'text'
+
+  deleteGlobalVersions: DeleteGlobalVersions
 
   deleteMany: DeleteMany
 
@@ -382,6 +383,16 @@ export type DeleteVersionsArgs = {
   where: Where
 }
 
+export type DeleteGlobalVersionsArgs = {
+  locale?: string
+  req?: Partial<PayloadRequest>
+  slug: GlobalSlug
+  sort?: {
+    [key: string]: string
+  }
+  where: Where
+}
+
 export type CreateVersionArgs<T = TypeWithID> = {
   autosave: boolean
   collectionSlug: CollectionSlug
@@ -431,6 +442,8 @@ export type CreateGlobalVersion = <T extends TypeWithID = TypeWithID>(
 ) => Promise<TypeWithVersion<T>>
 
 export type DeleteVersions = (args: DeleteVersionsArgs) => Promise<void>
+
+export type DeleteGlobalVersions = (args: DeleteGlobalVersionsArgs) => Promise<void>
 
 export type UpdateVersionArgs<T = TypeWithID> = {
   collection: CollectionSlug

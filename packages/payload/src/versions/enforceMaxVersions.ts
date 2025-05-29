@@ -15,13 +15,13 @@ type Args = {
 export const enforceMaxVersions = async ({
   id,
   collection,
-  global,
+  global: globalConfig,
   max,
   payload,
   req,
 }: Args): Promise<void> => {
   const entityType = collection ? 'collection' : 'global'
-  const slug = collection ? collection.slug : global?.slug
+  const slug = collection ? collection.slug : globalConfig?.slug
 
   try {
     const where: Where = {}
@@ -43,9 +43,9 @@ export const enforceMaxVersions = async ({
       })
 
       ;[oldestAllowedDoc] = query.docs
-    } else if (global) {
+    } else if (globalConfig) {
       const query = await payload.db.findGlobalVersions({
-        global: global.slug,
+        global: globalConfig.slug,
         limit: 1,
         pagination: false,
         req,
@@ -70,13 +70,18 @@ export const enforceMaxVersions = async ({
         }
       }
 
-      await payload.db.deleteVersions({
-        collection: slug,
-        req,
-        where: deleteQuery,
-      })
+      if (globalConfig) {
+        await payload.db.deleteGlobalVersions({ slug, req, where: deleteQuery })
+      } else {
+        await payload.db.deleteVersions({
+          collection: slug,
+          req,
+          where: deleteQuery,
+        })
+      }
     }
   } catch (err) {
+    payload.logger.error(err)
     payload.logger.error(
       `There was an error cleaning up old versions for the ${entityType} ${slug}`,
     )

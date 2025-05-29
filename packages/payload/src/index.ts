@@ -1140,6 +1140,8 @@ export type {
   CreateVersionArgs,
   DatabaseAdapterResult as DatabaseAdapterObj,
   DBIdentifierName,
+  DeleteGlobalVersions,
+  DeleteGlobalVersionsArgs,
   DeleteMany,
   DeleteManyArgs,
   DeleteOne,
